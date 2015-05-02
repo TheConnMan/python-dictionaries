@@ -1,20 +1,20 @@
 import csv
 
 def parseLSA():
-    LSADict = {
-        'street': {},
-        'taxi': {},
-        'tongue': {}
-    };
+    header = [];
+    LSADict = {};
     with open('data/LSAsamples.csv', 'rb') as csvfile:
         LSAreader = csv.reader(csvfile, delimiter=',');
         for row in LSAreader:
-            if row[1] != '':
-                LSADict['street'][row[0]] = float(row[1]);
-            if row[4] != '':
-                LSADict['taxi'][row[3]] = float(row[4]);
-            if row[7] != '':
-                LSADict['tongue'][row[6]] = float(row[7]);
+            if len(header) == 0:
+                header = [cell.lower() for cell in row];
+                for cell in header:
+                    if cell != '':
+                        LSADict[cell] = {};
+            else:
+                for i in range(0, len(header)):
+                    if header[i] != '' and row[i + 1] != '':
+                        LSADict[header[i]][row[i]] = float(row[i + 1]);
                 
     return LSADict
 
