@@ -37,18 +37,18 @@ def getResponseObject(header, row):
         response[header[i]] = row[i];                                   # Add the value to the response dict under the header key
     return response;
 
-def calculateScore(LSADict, response):
+def rewriteScores(LSADict, response):
     LSAKeys = LSADict.keys()
-    score = 0;
+    rewrittenString = '';
     for key in LSAKeys:                                                 # For each key in the LSA dict
         if response[key] in LSADict[key]:                               # Check to make sure the reponse value has a score associated with it
-            score += LSADict[key][response[key]];                       # Add the response score to the response's total score
+            rewrittenString += ',' + str(LSADict[key][response[key]])   # Add the response score to the rewritten string
         else:                                                           # Print an error if a response doesn't have a score
+            rewrittenString += ',0.0'; 
             print 'ERROR: Response value=' + response[key] + ' doesn\'t exist.'
-    return score;
+    return rewrittenString;
 
 LSADict = parseLSA();                                                   # Get the dict
 responses = parseResponses('responsefilesample.csv');                   # Parse the responses
 for response in responses:
-    score = calculateScore(LSADict, response);                          # Calculate and print each response score
-    print 'Score for subject *' + response['subject'] + '* is ' + str(score)
+    print response['subject'] + rewriteScores(LSADict, response);
